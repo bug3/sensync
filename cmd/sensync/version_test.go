@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"strings"
 	"testing"
 )
 
@@ -14,8 +13,8 @@ func TestVersionCommand(t *testing.T) {
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("execute: %v", err)
 	}
-	got := out.String()
-	if !strings.Contains(got, "sensync") {
-		t.Errorf("expected output to contain 'sensync', got %q", got)
+	const want = "sensync 0.0.1-dev\n"
+	if got := out.String(); got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
