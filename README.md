@@ -20,21 +20,29 @@ Cross-platform mouse and trackpad sensitivity sync. One config, three operating 
 ```sh
 git clone https://github.com/bug3/sensync
 cd sensync
-go build ./cmd/sensync
+go build -o ~/.local/bin/sensync ./cmd/sensync
 ```
 
-The resulting `./sensync` binary is self-contained.
+Make sure `~/.local/bin` is on your `PATH` (or place the binary wherever you keep CLIs).
 
 ## Quick start
 
-1. Copy `configs/sensync.example.toml` to `./sensync.toml` and edit values.
-2. On Linux (Hyprland), add `source = ~/.config/hypr/sensync.conf` to your `hyprland.conf` once.
-3. Run `./sensync apply` on each host. Re-run after changing `./sensync.toml`.
+1. `sensync init` writes an example config to your user config directory:
+   - Linux: `~/.config/sensync/config.toml`
+   - macOS: `~/Library/Application Support/sensync/config.toml`
+   - Windows: `%APPDATA%\sensync\config.toml`
+2. Edit the file to set your preferred sensitivity, acceleration, scroll behavior.
+3. On Linux (Hyprland), add `source = ~/.config/hypr/sensync.conf` to your `hyprland.conf` once.
+4. Run `sensync apply` on each host. Re-run after changing the config.
+
+If you prefer to keep the config in a git-synced dotfiles repo, drop a `sensync.toml` in the directory you run `sensync` from, or pass `--config <path>` explicitly. The CLI looks in this order: `--config` flag, `./sensync.toml`, then the user config directory.
 
 ## Commands
 
 ```
-sensync apply              Apply ./sensync.toml on this host
+sensync init               Write example config to the user config directory
+sensync init --force       Overwrite an existing config file
+sensync apply              Apply the resolved sensync config on this host
 sensync apply --dry-run    Print planned changes without applying
 sensync apply --yes        Skip confirmation prompts
 sensync apply --config X   Explicit config path

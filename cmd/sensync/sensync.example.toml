@@ -1,5 +1,5 @@
-# sensync example config.
-# Copy this to ./sensync.toml or $XDG_CONFIG_HOME/sensync/config.toml.
+# sensync config. Edit the values below, then run `sensync apply`.
+# Re-run `sensync init --force` to reset this file from the embedded example.
 
 version = 1
 

@@ -95,7 +95,7 @@ func resolveConfigPath(explicit string) (string, error) {
 			return candidate, nil
 		}
 	}
-	return "", errors.New("no config found: pass --config or create ./sensync.toml")
+	return "", errors.New("no config found: run `sensync init`, pass --config, or create ./sensync.toml")
 }
 
 func needsTrackpadPrompt(cfg config.Config) bool {
