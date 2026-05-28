@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bug3dev/sensync/internal/adapter"
+	"github.com/bug3dev/sensync/internal/adapter/types"
 	"github.com/bug3dev/sensync/internal/config"
 )
 
@@ -16,7 +16,7 @@ func TestWindowsUnityPlanSetsSensitivity10AndAccelOff(t *testing.T) {
 	}
 	var sawSens10, sawSpeed0, sawThr1Zero, sawThr2Zero, sawSysCall bool
 	for _, s := range got.Steps {
-		if s.Kind == adapter.StepRegSet {
+		if s.Kind == types.StepRegSet {
 			joined := strings.Join(s.Args, " ")
 			switch {
 			case strings.Contains(joined, "MouseSensitivity") && strings.Contains(joined, "10"):
@@ -29,7 +29,7 @@ func TestWindowsUnityPlanSetsSensitivity10AndAccelOff(t *testing.T) {
 				sawThr2Zero = true
 			}
 		}
-		if s.Kind == adapter.StepSysCall && strings.Contains(s.Target, "SPI_SETMOUSE") {
+		if s.Kind == types.StepSysCall && strings.Contains(s.Target, "SPI_SETMOUSE") {
 			sawSysCall = true
 		}
 	}

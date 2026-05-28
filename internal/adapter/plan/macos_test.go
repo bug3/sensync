@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bug3dev/sensync/internal/adapter"
+	"github.com/bug3dev/sensync/internal/adapter/types"
 	"github.com/bug3dev/sensync/internal/config"
 )
 
@@ -16,7 +16,7 @@ func TestMacOSUnityPlanWritesScalingMinusOne(t *testing.T) {
 	}
 	var sawMouseScaling bool
 	for _, s := range got.Steps {
-		if s.Kind != adapter.StepExec || s.Target != "defaults" {
+		if s.Kind != types.StepExec || s.Target != "defaults" {
 			continue
 		}
 		joined := strings.Join(s.Args, " ")

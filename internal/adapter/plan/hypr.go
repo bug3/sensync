@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bug3dev/sensync/internal/adapter"
+	"github.com/bug3dev/sensync/internal/adapter/types"
 	"github.com/bug3dev/sensync/internal/config"
 	"github.com/bug3dev/sensync/internal/mapping"
 )
@@ -17,7 +17,7 @@ import (
 // Hyprland's `input { sensitivity = X }` is global across pointing devices.
 // If the config asks for diverging mouse and trackpad sensitivity, a warning
 // is emitted and trackpad values win (last-write within the generated block).
-func Hyprland(cfg config.Config, confPath string) (adapter.Plan, error) {
+func Hyprland(cfg config.Config, confPath string) (types.Plan, error) {
 	var warnings []string
 	if cfg.Mouse.Sensitivity != cfg.Trackpad.Sensitivity {
 		warnings = append(warnings,
@@ -37,46 +37,46 @@ func Hyprland(cfg config.Config, confPath string) (adapter.Plan, error) {
 	}
 
 	conf := buildHyprlandConf(cfg, sens, accelProfile)
-	steps := []adapter.Step{
+	steps := []types.Step{
 		{
-			Kind:   adapter.StepWriteFile,
+			Kind:   types.StepWriteFile,
 			Target: confPath,
 			Args:   []string{conf},
 			Desc:   "write " + confPath,
 		},
 		{
-			Kind:   adapter.StepExec,
+			Kind:   types.StepExec,
 			Target: "hyprctl",
 			Args:   []string{"keyword", "input:sensitivity", strconv.FormatFloat(sens, 'f', -1, 64)},
 			Desc:   "hyprctl input:sensitivity " + strconv.FormatFloat(sens, 'f', -1, 64),
 		},
 		{
-			Kind:   adapter.StepExec,
+			Kind:   types.StepExec,
 			Target: "hyprctl",
 			Args:   []string{"keyword", "input:accel_profile", accelProfile},
 			Desc:   "hyprctl input:accel_profile " + accelProfile,
 		},
 		{
-			Kind:   adapter.StepExec,
+			Kind:   types.StepExec,
 			Target: "hyprctl",
 			Args:   []string{"keyword", "input:natural_scroll", strconv.FormatBool(cfg.Mouse.NaturalScroll)},
 			Desc:   "hyprctl input:natural_scroll " + strconv.FormatBool(cfg.Mouse.NaturalScroll),
 		},
 		{
-			Kind:   adapter.StepExec,
+			Kind:   types.StepExec,
 			Target: "hyprctl",
 			Args:   []string{"keyword", "input:scroll_factor", strconv.FormatFloat(cfg.Mouse.ScrollSpeed, 'f', -1, 64)},
 			Desc:   "hyprctl input:scroll_factor " + strconv.FormatFloat(cfg.Mouse.ScrollSpeed, 'f', -1, 64),
 		},
 		{
-			Kind:   adapter.StepExec,
+			Kind:   types.StepExec,
 			Target: "hyprctl",
 			Args:   []string{"keyword", "input:touchpad:natural_scroll", strconv.FormatBool(cfg.Trackpad.NaturalScroll)},
 			Desc:   "hyprctl input:touchpad:natural_scroll " + strconv.FormatBool(cfg.Trackpad.NaturalScroll),
 		},
 	}
 
-	return adapter.Plan{Steps: steps, Warnings: warnings}, nil
+	return types.Plan{Steps: steps, Warnings: warnings}, nil
 }
 
 func buildHyprlandConf(cfg config.Config, sens float64, accelProfile string) string {

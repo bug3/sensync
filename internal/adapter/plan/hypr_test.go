@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bug3dev/sensync/internal/adapter"
+	"github.com/bug3dev/sensync/internal/adapter/types"
 	"github.com/bug3dev/sensync/internal/config"
 )
 
@@ -18,7 +18,7 @@ func TestHyprlandUnityPlan(t *testing.T) {
 	var hasFileWrite, hasSensCmd, hasAccelCmd bool
 	for _, s := range got.Steps {
 		switch {
-		case s.Kind == adapter.StepWriteFile && s.Target == "/home/u/.config/hypr/sensync.conf":
+		case s.Kind == types.StepWriteFile && s.Target == "/home/u/.config/hypr/sensync.conf":
 			hasFileWrite = true
 			if !strings.Contains(s.Args[0], "sensitivity = 0") {
 				t.Errorf("expected `sensitivity = 0` in file, got:\n%s", s.Args[0])
@@ -26,9 +26,9 @@ func TestHyprlandUnityPlan(t *testing.T) {
 			if !strings.Contains(s.Args[0], "accel_profile = flat") {
 				t.Errorf("expected `accel_profile = flat` in file, got:\n%s", s.Args[0])
 			}
-		case s.Kind == adapter.StepExec && s.Target == "hyprctl" && stepArgsContain(s, "input:sensitivity"):
+		case s.Kind == types.StepExec && s.Target == "hyprctl" && stepArgsContain(s, "input:sensitivity"):
 			hasSensCmd = true
-		case s.Kind == adapter.StepExec && s.Target == "hyprctl" && stepArgsContain(s, "input:accel_profile"):
+		case s.Kind == types.StepExec && s.Target == "hyprctl" && stepArgsContain(s, "input:accel_profile"):
 			hasAccelCmd = true
 		}
 	}
@@ -55,7 +55,7 @@ func TestHyprlandWarnsWhenMouseAndTrackpadDiffer(t *testing.T) {
 	}
 }
 
-func stepArgsContain(s adapter.Step, needle string) bool {
+func stepArgsContain(s types.Step, needle string) bool {
 	for _, a := range s.Args {
 		if strings.Contains(a, needle) {
 			return true

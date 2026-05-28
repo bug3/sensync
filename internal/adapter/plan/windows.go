@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/bug3dev/sensync/internal/adapter"
+	"github.com/bug3dev/sensync/internal/adapter/types"
 	"github.com/bug3dev/sensync/internal/config"
 	"github.com/bug3dev/sensync/internal/mapping"
 )
@@ -19,7 +19,7 @@ const (
 // so no elevation is needed. After registry changes are written, a
 // SystemParametersInfo broadcast (SPI_SETMOUSE = 0x0004) tells the running
 // session to pick up the new values without logout.
-func Windows(cfg config.Config) (adapter.Plan, error) {
+func Windows(cfg config.Config) (types.Plan, error) {
 	var warnings []string
 
 	if cfg.Mouse.NaturalScroll || cfg.Trackpad.NaturalScroll {
@@ -39,7 +39,7 @@ func Windows(cfg config.Config) (adapter.Plan, error) {
 		mouseSpeed = "1"
 	}
 
-	steps := []adapter.Step{
+	steps := []types.Step{
 		regSet(regMouse, "MouseSensitivity", "REG_SZ", strconv.Itoa(sensVal)),
 		regSet(regMouse, "MouseSpeed", "REG_SZ", mouseSpeed),
 		regSet(regMouse, "MouseThreshold1", "REG_SZ", "0"),
@@ -47,18 +47,18 @@ func Windows(cfg config.Config) (adapter.Plan, error) {
 		regSet(regDesktop, "WheelScrollLines", "REG_SZ", scrollLinesFromSpeed(cfg.Mouse.ScrollSpeed)),
 		regSet(regPrecisionTouch, "Sensitivity", "REG_DWORD", trackpadSensValue(cfg.Trackpad.Sensitivity)),
 		{
-			Kind:   adapter.StepSysCall,
+			Kind:   types.StepSysCall,
 			Target: "SPI_SETMOUSE",
 			Args:   nil,
 			Desc:   "SystemParametersInfo(SPI_SETMOUSE) to broadcast mouse changes",
 		},
 	}
-	return adapter.Plan{Steps: steps, Warnings: warnings}, nil
+	return types.Plan{Steps: steps, Warnings: warnings}, nil
 }
 
-func regSet(path, name, typ, value string) adapter.Step {
-	return adapter.Step{
-		Kind:   adapter.StepRegSet,
+func regSet(path, name, typ, value string) types.Step {
+	return types.Step{
+		Kind:   types.StepRegSet,
 		Target: path,
 		Args:   []string{name, typ, value},
 		Desc:   fmt.Sprintf(`reg set %s\%s (%s) = %s`, path, name, typ, value),
