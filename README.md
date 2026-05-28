@@ -60,4 +60,4 @@ For a git-synced dotfiles flow, drop a `sensync.toml` in the directory you run `
 
 ## License
 
-[MIT](./LICENSE).
+[MIT](./LICENSE)
