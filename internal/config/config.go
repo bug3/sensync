@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"math"
-	"os"
 
 	"github.com/BurntSushi/toml"
 )
@@ -40,14 +39,10 @@ func Default() Config {
 }
 
 func Load(path string) (Config, error) {
-	raw, err := os.ReadFile(path)
-	if err != nil {
-		return Config{}, fmt.Errorf("read config %s: %w", path, err)
-	}
 	cfg := Default()
-	meta, err := toml.Decode(string(raw), &cfg)
+	meta, err := toml.DecodeFile(path, &cfg)
 	if err != nil {
-		return Config{}, fmt.Errorf("parse config %s: %w", path, err)
+		return Config{}, fmt.Errorf("load config %s: %w", path, err)
 	}
 	if undecoded := meta.Undecoded(); len(undecoded) > 0 {
 		return Config{}, fmt.Errorf("unknown keys in %s: %v", path, undecoded)

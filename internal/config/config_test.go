@@ -42,11 +42,11 @@ scroll_speed = 1.0
 	if cfg.Mouse.Sensitivity != 1.0 {
 		t.Errorf("mouse.sensitivity: got %v, want 1.0", cfg.Mouse.Sensitivity)
 	}
-	if cfg.Mouse.Acceleration != false {
-		t.Errorf("mouse.acceleration: got %v, want false", cfg.Mouse.Acceleration)
+	if cfg.Mouse.Acceleration {
+		t.Errorf("mouse.acceleration: got true, want false")
 	}
-	if cfg.Trackpad.NaturalScroll != true {
-		t.Errorf("trackpad.natural_scroll: got %v, want true", cfg.Trackpad.NaturalScroll)
+	if !cfg.Trackpad.NaturalScroll {
+		t.Errorf("trackpad.natural_scroll: got false, want true")
 	}
 }
 
@@ -114,6 +114,28 @@ scroll_speed = 1.0
 	_, err := Load(writeTempConfig(t, body))
 	if err == nil {
 		t.Fatal("expected range error, got nil")
+	}
+}
+
+func TestLoadRejectsOutOfRangeScrollSpeed(t *testing.T) {
+	body := `
+version = 1
+
+[mouse]
+sensitivity = 1.0
+acceleration = false
+natural_scroll = false
+scroll_speed = 10.0
+
+[trackpad]
+sensitivity = 1.0
+acceleration = false
+natural_scroll = true
+scroll_speed = 1.0
+`
+	_, err := Load(writeTempConfig(t, body))
+	if err == nil {
+		t.Fatal("expected scroll_speed range error, got nil")
 	}
 }
 
