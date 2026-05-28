@@ -1,0 +1,25 @@
+# Build artifacts
+/sensync
+/sensync.exe
+/dist/
+/bin/
+
+# Go
+*.test
+*.out
+coverage.txt
+vendor/
+
+# Local design docs and notes (not committed)
+docs/
+
+# Editor and OS noise
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local config overrides
+sensync.local.toml
