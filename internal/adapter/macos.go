@@ -10,6 +10,7 @@ import (
 
 	"github.com/bug3/sensync/internal/adapter/plan"
 	"github.com/bug3/sensync/internal/config"
+	"github.com/bug3/sensync/internal/mapping"
 )
 
 type MacOSAdapter struct {
@@ -48,30 +49,10 @@ func (a *MacOSAdapter) Apply(p Plan, dryRun bool) (Result, error) {
 func (a *MacOSAdapter) Get() (config.Config, error) {
 	cfg := config.Default()
 	if v, err := readDefaultsFloat("com.apple.mouse.scaling"); err == nil {
-		switch {
-		case v == -1.0:
-			cfg.Mouse.Sensitivity = 1.0
-			cfg.Mouse.Acceleration = false
-		case v == 0.0:
-			cfg.Mouse.Sensitivity = 1.0
-			cfg.Mouse.Acceleration = true
-		default:
-			cfg.Mouse.Sensitivity = (v / 3.0) + 1.0
-			cfg.Mouse.Acceleration = true
-		}
+		cfg.Mouse.Sensitivity, cfg.Mouse.Acceleration = mapping.MacOSMultiplierFromScaling(v)
 	}
 	if v, err := readDefaultsFloat("com.apple.trackpad.scaling"); err == nil {
-		switch {
-		case v == -1.0:
-			cfg.Trackpad.Sensitivity = 1.0
-			cfg.Trackpad.Acceleration = false
-		case v == 0.0:
-			cfg.Trackpad.Sensitivity = 1.0
-			cfg.Trackpad.Acceleration = true
-		default:
-			cfg.Trackpad.Sensitivity = (v / 3.0) + 1.0
-			cfg.Trackpad.Acceleration = true
-		}
+		cfg.Trackpad.Sensitivity, cfg.Trackpad.Acceleration = mapping.MacOSMultiplierFromScaling(v)
 	}
 	if v, err := readDefaultsBool("com.apple.swipescrolldirection"); err == nil {
 		cfg.Mouse.NaturalScroll = v

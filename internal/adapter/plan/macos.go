@@ -17,7 +17,7 @@ func MacOS(cfg config.Config) (types.Plan, error) {
 
 	if cfg.Mouse.NaturalScroll != cfg.Trackpad.NaturalScroll {
 		warnings = append(warnings,
-			"macos: com.apple.swipescrolldirection is a single global setting; trackpad and mouse natural_scroll cannot diverge. Using mouse value.")
+			"macos: com.apple.swipescrolldirection is a single global setting; trackpad and mouse natural_scroll cannot diverge. Using trackpad value.")
 	}
 	if cfg.Mouse.Sensitivity != 1.0 && !cfg.Mouse.Acceleration {
 		warnings = append(warnings,
@@ -30,7 +30,7 @@ func MacOS(cfg config.Config) (types.Plan, error) {
 	steps := []types.Step{
 		defaultsFloat("com.apple.mouse.scaling", mouseScale),
 		defaultsFloat("com.apple.trackpad.scaling", trackpadScale),
-		defaultsBool("com.apple.swipescrolldirection", cfg.Mouse.NaturalScroll),
+		defaultsBool("com.apple.swipescrolldirection", cfg.Trackpad.NaturalScroll),
 		defaultsFloat("com.apple.scrollwheel.scaling", cfg.Mouse.ScrollSpeed),
 	}
 	return types.Plan{Steps: steps, Warnings: warnings}, nil

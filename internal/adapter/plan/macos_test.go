@@ -48,3 +48,27 @@ func TestMacOSWarnsWhenNaturalScrollDiffers(t *testing.T) {
 		t.Errorf("expected warning about global swipescrolldirection, got: %v", got.Warnings)
 	}
 }
+
+func TestMacOSNaturalScrollUsesTrackpadValue(t *testing.T) {
+	// On macOS the only switch is global, but trackpad is the primary
+	// device — so when mouse=false and trackpad=true, we must still write
+	// true (matching the user's trackpad intent), not silently default to
+	// the mouse value.
+	cfg := config.Default()
+	cfg.Mouse.NaturalScroll = false
+	cfg.Trackpad.NaturalScroll = true
+	got, err := MacOS(cfg)
+	if err != nil {
+		t.Fatalf("MacOS: %v", err)
+	}
+	var wroteTrue bool
+	for _, s := range got.Steps {
+		joined := strings.Join(s.Args, " ")
+		if strings.Contains(joined, "com.apple.swipescrolldirection") && strings.Contains(joined, "true") {
+			wroteTrue = true
+		}
+	}
+	if !wroteTrue {
+		t.Errorf("expected swipescrolldirection=true (trackpad value), got steps: %+v", got.Steps)
+	}
+}
