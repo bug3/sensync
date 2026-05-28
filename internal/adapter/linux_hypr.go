@@ -67,8 +67,18 @@ func (a *HyprlandAdapter) Apply(p Plan, dryRun bool) (Result, error) {
 func (a *HyprlandAdapter) Get() (config.Config, error) {
 	cfg := config.Default()
 	if v, err := readHyprctlFloat("input:sensitivity"); err == nil {
-		cfg.Mouse.Sensitivity = v + 1.0
-		cfg.Trackpad.Sensitivity = v + 1.0
+		// Hyprland reports values in [-1.0, 1.0]; v+1.0 yields [0.0, 2.0].
+		// Clamp into the config validation range so `sensync get | sensync apply`
+		// round-trips cleanly.
+		m := v + 1.0
+		if m < 0.1 {
+			m = 0.1
+		}
+		if m > 3.0 {
+			m = 3.0
+		}
+		cfg.Mouse.Sensitivity = m
+		cfg.Trackpad.Sensitivity = m
 	}
 	// Acceleration, natural_scroll, and scroll_speed are not read in MVP; the
 	// other config fields stay at Default() values so `get` output is still

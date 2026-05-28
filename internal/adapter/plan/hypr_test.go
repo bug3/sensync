@@ -55,6 +55,45 @@ func TestHyprlandWarnsWhenMouseAndTrackpadDiffer(t *testing.T) {
 	}
 }
 
+func TestHyprlandUsesAdaptiveProfileWhenAccelOn(t *testing.T) {
+	cfg := config.Default()
+	cfg.Mouse.Acceleration = true
+	cfg.Trackpad.Acceleration = true
+	got, err := Hyprland(cfg, "/tmp/x.conf")
+	if err != nil {
+		t.Fatalf("Hyprland: %v", err)
+	}
+	for _, s := range got.Steps {
+		if s.Kind == types.StepWriteFile {
+			if !strings.Contains(s.Args[0], "accel_profile = adaptive") {
+				t.Errorf("expected `accel_profile = adaptive` in file when accel=true, got:\n%s", s.Args[0])
+			}
+		}
+	}
+}
+
+func TestHyprlandWarnsWhenAccelOnAtNonUnitySensitivity(t *testing.T) {
+	cfg := config.Default()
+	cfg.Mouse.Sensitivity = 1.5
+	cfg.Trackpad.Sensitivity = 1.5
+	cfg.Mouse.Acceleration = true
+	cfg.Trackpad.Acceleration = true
+	got, err := Hyprland(cfg, "/tmp/x.conf")
+	if err != nil {
+		t.Fatalf("Hyprland: %v", err)
+	}
+	found := false
+	for _, w := range got.Warnings {
+		if strings.Contains(w, "adaptive profile") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("expected warning about adaptive profile ignoring multiplier, got: %v", got.Warnings)
+	}
+}
+
 func stepArgsContain(s types.Step, needle string) bool {
 	for _, a := range s.Args {
 		if strings.Contains(a, needle) {

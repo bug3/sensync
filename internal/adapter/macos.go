@@ -78,7 +78,11 @@ func (a *MacOSAdapter) Get() (config.Config, error) {
 		cfg.Trackpad.NaturalScroll = v
 	}
 	if v, err := readDefaultsFloat("com.apple.scrollwheel.scaling"); err == nil {
+		// macOS exposes a single scroll-speed knob via defaults; mirror it to
+		// trackpad so `sensync get | sensync apply` round-trips without losing
+		// the trackpad value to Default().
 		cfg.Mouse.ScrollSpeed = v
+		cfg.Trackpad.ScrollSpeed = v
 	}
 	return cfg, nil
 }

@@ -32,8 +32,12 @@ func Hyprland(cfg config.Config, confPath string) (types.Plan, error) {
 	// Trackpad values win because they are written second within the input block.
 	sens := mapping.HyprlandSensitivityFromMultiplier(cfg.Trackpad.Sensitivity)
 	accelProfile := "flat"
-	if cfg.Trackpad.Acceleration && cfg.Trackpad.Sensitivity == 1.0 {
+	if cfg.Trackpad.Acceleration {
 		accelProfile = "adaptive"
+		if cfg.Trackpad.Sensitivity != 1.0 {
+			warnings = append(warnings,
+				"hyprland: acceleration=true uses libinput's adaptive profile which ignores the sensitivity multiplier; effective sensitivity may differ from the requested value")
+		}
 	}
 
 	conf := buildHyprlandConf(cfg, sens, accelProfile)
