@@ -6,10 +6,13 @@ const appVersion = "0.0.1-dev"
 
 func newRootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:   "sensync",
-		Short: "Cross-platform mouse sensitivity sync",
+		Use:           "sensync",
+		Short:         "Cross-platform mouse sensitivity sync",
+		SilenceErrors: true, // main.go formats and prints errors itself
+		SilenceUsage:  true, // don't print usage on runtime errors
 	}
 	root.AddCommand(newVersionCmd())
+	root.AddCommand(newApplyCmd())
 	return root
 }
 
