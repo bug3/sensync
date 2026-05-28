@@ -2,12 +2,14 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 
 	"github.com/bug3dev/sensync/internal/adapter"
 	"github.com/bug3dev/sensync/internal/config"
@@ -46,8 +48,11 @@ func newApplyCmd() *cobra.Command {
 				fmt.Fprintln(cmd.ErrOrStderr(), "warning:", w)
 			}
 			if !yes && needsTrackpadPrompt(cfg) {
+				if !isStdinTTY() {
+					return userErr(errors.New("mouse/trackpad settings differ and stdin is not a TTY; pass --yes to skip prompt"))
+				}
 				if !confirmTTY(cmd, "Apply may overwrite mouse settings with trackpad values. Continue? [y/N]: ") {
-					return userErr(fmt.Errorf("aborted by user"))
+					return userErr(errors.New("aborted by user"))
 				}
 			}
 
@@ -64,13 +69,10 @@ func newApplyCmd() *cobra.Command {
 				return hostErr(err)
 			}
 			printApplySummary(cmd, a.Name(), res)
-			switch res.ExitCode() {
-			case 0:
-				return nil
-			default:
-				os.Exit(res.ExitCode())
-				return nil
+			if code := res.ExitCode(); code != 0 {
+				return cliError{code: code}
 			}
+			return nil
 		},
 	}
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "Print planned steps without changing anything")
@@ -93,12 +95,16 @@ func resolveConfigPath(explicit string) (string, error) {
 			return candidate, nil
 		}
 	}
-	return "", fmt.Errorf("no config found: pass --config or create ./sensync.toml")
+	return "", errors.New("no config found: pass --config or create ./sensync.toml")
 }
 
 func needsTrackpadPrompt(cfg config.Config) bool {
 	return cfg.Mouse.Sensitivity != cfg.Trackpad.Sensitivity ||
 		cfg.Mouse.Acceleration != cfg.Trackpad.Acceleration
+}
+
+func isStdinTTY() bool {
+	return term.IsTerminal(int(os.Stdin.Fd()))
 }
 
 func confirmTTY(cmd *cobra.Command, prompt string) bool {
@@ -125,12 +131,22 @@ func printApplySummary(cmd *cobra.Command, name string, res adapter.Result) {
 	}
 }
 
+// cliError carries a process exit code from RunE up to main(). When err is
+// nil, main() exits with the code without printing anything (the caller has
+// already produced any user-facing output, e.g. printApplySummary).
 type cliError struct {
 	err  error
 	code int
 }
 
-func (e cliError) Error() string { return e.err.Error() }
+func (e cliError) Error() string {
+	if e.err == nil {
+		return ""
+	}
+	return e.err.Error()
+}
+
+func (e cliError) Unwrap() error { return e.err }
 
 func userErr(err error) error { return cliError{err: err, code: 1} }
 func hostErr(err error) error { return cliError{err: err, code: 2} }
