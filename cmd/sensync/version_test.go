@@ -13,7 +13,7 @@ func TestVersionCommand(t *testing.T) {
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("execute: %v", err)
 	}
-	const want = "sensync 0.0.1-dev\n"
+	const want = "sensync 0.1.0\n"
 	if got := out.String(); got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

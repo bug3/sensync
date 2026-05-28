@@ -2,7 +2,7 @@ package main
 
 import "github.com/spf13/cobra"
 
-const appVersion = "0.0.1-dev"
+const appVersion = "0.1.0"
 
 func newRootCmd() *cobra.Command {
 	root := &cobra.Command{

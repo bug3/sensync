@@ -1,0 +1,21 @@
+# sensync example config.
+# Copy this to ./sensync.toml or $XDG_CONFIG_HOME/sensync/config.toml.
+
+version = 1
+
+[mouse]
+# 1.0 = mathematical 1:1 across Linux/Hyprland, macOS, and Windows.
+# Range: 0.1 to 3.0. Non-1.0 values are best-effort approximations.
+sensitivity = 1.0
+# OS-level pointer acceleration. Only honored at sensitivity = 1.0.
+acceleration = false
+# true = "natural" scroll direction (macOS default).
+natural_scroll = false
+# OS scroll multiplier. 1.0 = OS default.
+scroll_speed = 1.0
+
+[trackpad]
+sensitivity = 1.0
+acceleration = false
+natural_scroll = true
+scroll_speed = 1.0
