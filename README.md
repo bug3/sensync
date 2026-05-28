@@ -18,7 +18,7 @@ Cross-platform mouse and trackpad sensitivity sync. One config, three operating 
 ## Install
 
 ```sh
-git clone https://github.com/bug3dev/sensync
+git clone https://github.com/bug3/sensync
 cd sensync
 go build ./cmd/sensync
 ```

@@ -1,4 +1,4 @@
-module github.com/bug3dev/sensync
+module github.com/bug3/sensync
 
 go 1.25.0
 

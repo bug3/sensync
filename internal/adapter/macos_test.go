@@ -5,7 +5,7 @@ package adapter
 import (
 	"testing"
 
-	"github.com/bug3dev/sensync/internal/config"
+	"github.com/bug3/sensync/internal/config"
 )
 
 func TestMacOSAdapterApplyExecutesAllSteps(t *testing.T) {

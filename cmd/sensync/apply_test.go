@@ -10,9 +10,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bug3dev/sensync/internal/adapter"
-	"github.com/bug3dev/sensync/internal/adapter/types"
-	"github.com/bug3dev/sensync/internal/config"
+	"github.com/bug3/sensync/internal/adapter"
+	"github.com/bug3/sensync/internal/adapter/types"
+	"github.com/bug3/sensync/internal/config"
 )
 
 func TestResolveConfigPathExplicit(t *testing.T) {

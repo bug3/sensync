@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bug3dev/sensync/internal/adapter/types"
-	"github.com/bug3dev/sensync/internal/config"
+	"github.com/bug3/sensync/internal/adapter/types"
+	"github.com/bug3/sensync/internal/config"
 )
 
 func TestHyprlandUnityPlan(t *testing.T) {

@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bug3dev/sensync/internal/adapter/plan"
-	"github.com/bug3dev/sensync/internal/config"
+	"github.com/bug3/sensync/internal/adapter/plan"
+	"github.com/bug3/sensync/internal/config"
 )
 
 type MacOSAdapter struct {

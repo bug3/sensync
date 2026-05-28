@@ -10,8 +10,8 @@ import (
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/bug3dev/sensync/internal/adapter/plan"
-	"github.com/bug3dev/sensync/internal/config"
+	"github.com/bug3/sensync/internal/adapter/plan"
+	"github.com/bug3/sensync/internal/config"
 )
 
 const (

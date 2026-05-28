@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bug3dev/sensync/internal/adapter/types"
-	"github.com/bug3dev/sensync/internal/config"
-	"github.com/bug3dev/sensync/internal/mapping"
+	"github.com/bug3/sensync/internal/adapter/types"
+	"github.com/bug3/sensync/internal/config"
+	"github.com/bug3/sensync/internal/mapping"
 )
 
 // Hyprland builds a Plan for a Hyprland host. confPath is the absolute path

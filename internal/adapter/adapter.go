@@ -1,8 +1,8 @@
 package adapter
 
 import (
-	"github.com/bug3dev/sensync/internal/adapter/types"
-	"github.com/bug3dev/sensync/internal/config"
+	"github.com/bug3/sensync/internal/adapter/types"
+	"github.com/bug3/sensync/internal/config"
 )
 
 // Re-export shared value types so existing callers within the adapter
