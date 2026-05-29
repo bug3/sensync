@@ -45,7 +45,7 @@ For a git-synced dotfiles flow, drop a `sensync.toml` in the directory you run `
 
 ## Notes per OS
 
-- **macOS**: `defaults` writes apply to new processes; log out for full effect. `natural_scroll` maps to the single global `com.apple.swipescrolldirection` switch, so mouse and trackpad cannot diverge — the trackpad value wins and a warning is emitted when they differ. For per-device scroll direction, use a tool like [LinearMouse](https://github.com/linearmouse/linearmouse). Trackpad/mouse `sensitivity = 1.0` anchors to the macOS default tracking speed; `acceleration = false` only yields raw 1:1 at `sensitivity = 1.0`.
+- **macOS**: `defaults` writes apply to new processes; log out for full effect. `natural_scroll` maps to the single global `com.apple.swipescrolldirection` switch, so mouse and trackpad cannot diverge; the trackpad value wins and a warning is emitted when they differ. For per-device scroll direction, use a tool like [LinearMouse](https://github.com/linearmouse/linearmouse). Trackpad/mouse `sensitivity = 1.0` anchors to the macOS default tracking speed; `acceleration = false` only yields raw 1:1 at `sensitivity = 1.0`.
 - **Hyprland**: `input { sensitivity = X }` is global. Diverging mouse and trackpad sensitivity emits a warning, and trackpad values win.
 - **Windows**: natural scroll inversion is not supported in the MVP.
 
